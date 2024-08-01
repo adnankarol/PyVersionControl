@@ -1,55 +1,63 @@
-# Pythonic_Version_Control_System
-Pythonic Implementation of a Version Control System
+Certainly! Here are some test paths that you can use in your README for different commands. These paths are examples and should be adjusted to match actual directory structures relevant to your testing environment.
 
+## To Run
 
-## Table of Contents
-1. [ To Run. ](#Using)
-2. [ Example Command. ](#example)
-3. [ Current Features. ](#Features)
-4. [ Additional Information. ](#info)
+1. **Initialize the Repository**  
+   Run the command to set up the version control system in a test folder:
 
-<a name="using"></a>
-# To Run
+    ```sh
+    python bit.py --path C:\Users\adnan\Desktop\Test_Folder
+    ```
 
-1.  Open command line cmd at the root of the repository.
+2. **Commit Changed Files**  
+   Run the command to commit changes with a custom message:
 
-2.  Run the command   
+    ```sh
+    python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command commit-"Initial commit"
+    ```
 
-        python bit.py --path [path to project]
+3. **List All Versions**  
+   Run the command to list all versions of the files:
 
-3. Command to Commit changed Files
+    ```sh
+    python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command list_versions
+    ```
 
-        python bit.py --path [path to project] --command commit-mymessage
+## Example Command
 
-        python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command commit-test
+To initialize the repository:
 
+```sh
+python bit.py --path C:\Users\adnan\Desktop\Test_Folder
+```
 
-4. Command to list All versions 
+To list all versions:
 
-       python bit.py --path [path to project] --command list_versions
+```sh
+python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command list_versions
+```
 
-       python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command list_versions
+To commit changes:
 
-<a name="example"></a>
-# Example Command
+```sh
+python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command commit-"Added new feature"
+```
 
-`python bit.py --path C:\Users\adnan\Desktop\Test_Folder`
+## Current Features
 
-`python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command list_versions`
+1. **Version Control System Creation**  
+   Creates a version control system in the specified directory (`C:\Users\adnan\Desktop\Test_Folder`).
 
-`python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command list_versions`
+2. **Change Tracking**  
+   Tracks changes in files within the directory and records commit messages.
 
-<a name="Features"></a>
-# Current Features
+3. **New File Detection**  
+   Detects and commits new files added to the directory.
 
-1. Make a Version Control system Using BIT.
+4. **Commit Message Retrieval**  
+   Allows users to view all commit messages in the version history.
 
-2. Tracks any changes in the existing files, when user commits changes.
+## Additional Information
 
-3. Tracks when a new file is added.
-
-4. User can check all his active commits messages.
-
-<a name="info"></a>
-# Additional Information
-In case of error, feel free to contact us over Linkedin at [Adnan](https://www.linkedin.com/in/adnan-karol-aa1666179/) and [Niloy](https://www.linkedin.com/in/niloy-chakraborty/).
+In case of any errors, feel free to contact us on LinkedIn:
+- [Adnan](https://www.linkedin.com/in/adnan-karol-aa1666179/)
