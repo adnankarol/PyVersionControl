@@ -1,4 +1,17 @@
-Certainly! Here are some test paths that you can use in your README for different commands. These paths are examples and should be adjusted to match actual directory structures relevant to your testing environment.
+# Pythonic Version Control System
+
+**Pythonic Version Control System** is a lightweight, Python-based version control system designed to track changes in your project files. It provides basic version control functionality by allowing you to commit changes, track new files, and view commit history. This system is ideal for projects where a full-featured version control system might be too complex.
+
+## Introduction
+
+This tool implements a simple version control system in Python, allowing users to:
+
+- Create and manage versions of their project.
+- Track changes to files and directories.
+- Commit changes with custom messages.
+- List all available versions and their commit messages.
+
+It's designed to be easy to use and understand, making it a great choice for small to medium-sized projects.
 
 ## To Run
 
@@ -59,5 +72,4 @@ python bit.py --path C:\Users\adnan\Desktop\Test_Folder --command commit-"Added 
 
 ## Additional Information
 
-In case of any errors, feel free to contact us on LinkedIn:
-- [Adnan](https://www.linkedin.com/in/adnan-karol-aa1666179/)
+In case of any errors, feel free to contact me on LinkedIn: [Adnan](https://www.linkedin.com/in/adnan-karol-aa1666179/)
