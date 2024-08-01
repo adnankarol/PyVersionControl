@@ -1,5 +1,11 @@
+__author__ = "Adnan Karol"
+__version__ = "1.0.0"
+__maintainer__ = "Adnan Karol"
+__email__ = "adnanmushtaq5@gmail.com"
+__status__ = "DEV"
+
 # Import Dependencies
-import sys, os
+import os
 import argparse
 import glob
 import time
@@ -7,135 +13,113 @@ import shutil
 from distutils.dir_util import copy_tree
 
 
-def argsparser():
-
-    global path_to_folder
-    global command
-    parser = argparse.ArgumentParser(description='Version Control : BIT.')
-    parser.add_argument('--path',  help='Please Enter the path to Folder')
-    parser.add_argument('--command',  help='Please Enter the command if needed')
-
-    args = parser.parse_args()
-    path_to_folder = args.path
-    command = args.command
+def parse_args():
+    parser = argparse.ArgumentParser(description='Version Control: BIT.')
+    parser.add_argument('--path', required=True, help='Please enter the path to the folder')
+    parser.add_argument('--command', required=True, help='Please enter the command if needed')
+    return parser.parse_args()
 
 
 def get_size(filename):
-    filesize = os.path.getsize(filename)
-    return filesize
+    return os.path.getsize(filename)
 
 
-def create_bit_folder(path_to_folder):
-    # Function to check if Bit Base Folder exists if not create one 
-    if not os.path.exists(path_to_folder + "/bit_version"):
-        os.makedirs(path_to_folder + "/bit_version")
+def create_bit_folder(path):
+    bit_version_path = os.path.join(path, "bit_version")
+    if not os.path.exists(bit_version_path):
+        os.makedirs(bit_version_path)
 
 
-def create_base_version(path_to_folder):
-    # Function to check if earlier version exists if not create one 
-    version_path = path_to_folder + "/bit_version/version_1"
+def create_base_version(path):
+    version_path = os.path.join(path, "bit_version", "version_1")
 
     if not os.path.exists(version_path):
         os.makedirs(version_path)
 
-        f = open(version_path + "/commit_message.txt", "a")
-        f.write("version_" + str(time.time()) + " : Commit Message : Initial Code")
-        f.close()
-        
-        # make temp dir
-        if not os.path.exists(path_to_folder + "/temp"):
-            os.makedirs(path_to_folder + "/temp")
-        
-        copy_tree(path_to_folder, path_to_folder + "/temp")
-        shutil.rmtree(path_to_folder + "/temp" + "/bit_version")
-        shutil.rmtree(path_to_folder + "/temp" + "/temp")
-        # Copy contents of folder
-        copy_tree(path_to_folder + "/temp", version_path)
-        shutil.rmtree(path_to_folder + "/temp")
-        return 1
+        with open(os.path.join(version_path, "commit_message.txt"), "a") as f:
+            f.write(f"version_{time.time()} : Commit Message : Initial Code")
+
+        temp_path = os.path.join(path, "temp")
+        if not os.path.exists(temp_path):
+            os.makedirs(temp_path)
+
+        copy_tree(path, temp_path)
+        shutil.rmtree(os.path.join(temp_path, "bit_version"), ignore_errors=True)
+        shutil.rmtree(temp_path, ignore_errors=True)
+        copy_tree(temp_path, version_path)
+        shutil.rmtree(temp_path)
+
+        return True
+    return False
 
 
-def read_versions(path_to_folder):
+def read_versions(path):
     print("*" * 80)
-    for filename in glob.glob(path_to_folder + "/bit_version/*"):
-        with open (filename + "/commit_message.txt", "r") as myfile:
-            data=myfile.readlines()
-            print(data[0])
+    for filename in glob.glob(os.path.join(path, "bit_version", "*")):
+        with open(os.path.join(filename, "commit_message.txt"), "r") as myfile:
+            data = myfile.readline().strip()
+            print(data)
     print("*" * 80)
 
 
-def commit_changes(path_to_folder):
-    change = 0
+def commit_changes(path, commit_message):
+    change_detected = False
     current_time = str(time.time())
-    commit_message = command.split("-")[-1]
+    latest_version_folder = os.path.join(path, "bit_version", "*")
+    latest_version_file = os.path.join(path, "bit_version", "version_1")
 
-    latest_version_folder = path_to_folder + "/bit_version/*"
-    latest_version_file = path_to_folder + "/bit_version/version_1"
-
-    try :
+    try:
         for filename in glob.glob(latest_version_folder):
             if latest_version_file != "version_1":
-                latest_version_file =  filename
-                if int(filename.split("_")[-1].split(".")[0]) > int(latest_version_file.split("\\")[-1].split("_")[-1].split(".")[0]):
+                if int(filename.split("_")[-1].split(".")[0]) > int(latest_version_file.split("_")[-1].split(".")[0]):
                     latest_version_file = filename
-    except :
+    except Exception:
         pass
 
-    # Check which files have changed
-    for filename in glob.glob(path_to_folder + "/*"):
-
+    for filename in glob.glob(os.path.join(path, "*")):
         if "bit_version" not in filename:
             filesize_base = get_size(filename)
-
-            try :
-                filesize_last_commit = get_size(latest_version_file + "/" + filename.split("\\")[-1])
-            except:
-                print("File Added : " , filename)
+            try:
+                filesize_last_commit = get_size(os.path.join(latest_version_file, os.path.basename(filename)))
+            except FileNotFoundError:
+                print("File Added:", filename)
                 filesize_last_commit = 0
 
-            if filesize_base == filesize_last_commit:
-                pass
-            else :
-                change = 1
-
             if filesize_base != filesize_last_commit:
-                print("File Changed : ", filename.split("\\")[-1] )
+                print("File Changed:", os.path.basename(filename))
+                change_detected = True
 
-
-    # Copy Files to new version folder
-    for filename in glob.glob(path_to_folder + "/*"):
-        if change == 1:
+    if change_detected:
+        new_version_path = os.path.join(path, "bit_version", f"version_{current_time}")
+        os.makedirs(new_version_path)
+        for filename in glob.glob(os.path.join(path, "*")):
             if "bit_version" not in filename:
-                if not os.path.exists(path_to_folder + "/bit_version/version_" + current_time):
-                    os.makedirs(path_to_folder + "/bit_version/version_" + current_time)
-                shutil.copy(filename,path_to_folder + "/bit_version/version_" + current_time)
+                shutil.copy(filename, new_version_path)
 
-    # write a commit message
-    if change !=0:
-        f = open(path_to_folder + "/bit_version/version_" + current_time + "/commit_message.txt", "a")
-        f.write("version_" + current_time + " : Commit Message : " + commit_message )
-        f.close()
-    else :
-        print("Warning : No File Changed!!")
+        with open(os.path.join(new_version_path, "commit_message.txt"), "a") as f:
+            f.write(f"version_{current_time} : Commit Message : {commit_message}")
+    else:
+        print("Warning: No file changed!")
 
 
 def main():
-    print("The Project Path Entered is : ", path_to_folder)
+    args = parse_args()
+    path_to_folder = args.path
+    command = args.command
+
+    print("The project path entered is:", path_to_folder)
 
     create_bit_folder(path_to_folder)
-    base_version = create_base_version(path_to_folder)
-
-    if base_version == 1:
+    if create_base_version(path_to_folder):
         print("Initial Commit")
-        sys.exit(1)
+        return
 
-    if command == "list_versions" :
+    if command == "list_versions":
         read_versions(path_to_folder)
+    elif "commit" in command:
+        commit_message = command.split("-", 1)[-1] if '-' in command else "No commit message provided"
+        commit_changes(path_to_folder, commit_message)
 
-    if "commit" in command :
-        commit_changes(path_to_folder)
 
-
-if __name__ == "__main__": 
-    argsparser()
+if __name__ == "__main__":
     main()
