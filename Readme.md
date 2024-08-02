@@ -2,6 +2,8 @@
 
 **PyVersionControl** is a lightweight, Python-based version control system designed to track changes in your project files. It provides basic version control functionality by allowing you to commit changes, track new files, and view commit history. This system is ideal for projects where a full-featured version control system might be too complex.
 
+This project is a work in progress, aiming to demonstrate the concept of building a version control system using Python.
+
 ## Features
 
 - **Version Control System Creation:** Initialize a version control system in a specified directory.
