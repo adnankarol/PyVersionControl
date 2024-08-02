@@ -14,6 +14,12 @@ from distutils.dir_util import copy_tree
 
 
 def parse_args():
+    """
+    Parse command line arguments.
+
+    Returns:
+        argparse.Namespace: Parsed command line arguments.
+    """
     parser = argparse.ArgumentParser(description='Version Control: BIT.')
     parser.add_argument('--path', required=True, help='Please enter the path to the folder')
     parser.add_argument('--command', required=True, help='Please enter the command if needed')
@@ -21,16 +27,40 @@ def parse_args():
 
 
 def get_size(filename):
+    """
+    Get the size of a file.
+
+    Args:
+        filename (str): The path to the file.
+
+    Returns:
+        int: Size of the file in bytes.
+    """
     return os.path.getsize(filename)
 
 
 def create_bit_folder(path):
+    """
+    Create the .bit_version folder if it doesn't exist.
+
+    Args:
+        path (str): The path to the main folder.
+    """
     bit_version_path = os.path.join(path, "bit_version")
     if not os.path.exists(bit_version_path):
         os.makedirs(bit_version_path)
 
 
 def create_base_version(path):
+    """
+    Create the base version of the project.
+
+    Args:
+        path (str): The path to the main folder.
+
+    Returns:
+        bool: True if the base version was created, False otherwise.
+    """
     version_path = os.path.join(path, "bit_version", "version_1")
 
     if not os.path.exists(version_path):
@@ -54,6 +84,12 @@ def create_base_version(path):
 
 
 def read_versions(path):
+    """
+    Read and print all versions and their commit messages.
+
+    Args:
+        path (str): The path to the main folder.
+    """
     print("*" * 80)
     for filename in glob.glob(os.path.join(path, "bit_version", "*")):
         with open(os.path.join(filename, "commit_message.txt"), "r") as myfile:
@@ -63,6 +99,13 @@ def read_versions(path):
 
 
 def commit_changes(path, commit_message):
+    """
+    Commit changes to the project.
+
+    Args:
+        path (str): The path to the main folder.
+        commit_message (str): The commit message.
+    """
     change_detected = False
     current_time = str(time.time())
     latest_version_folder = os.path.join(path, "bit_version", "*")
@@ -103,6 +146,9 @@ def commit_changes(path, commit_message):
 
 
 def main():
+    """
+    Main function to run the version control system.
+    """
     args = parse_args()
     path_to_folder = args.path
     command = args.command
